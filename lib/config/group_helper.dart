@@ -6,9 +6,9 @@ class GroupHelper {
   static Future<dynamic> getGroupStanding({String? groupName}) async {
     try {
       var url = Uri.https(API.URL, API.STANDING + "/$groupName");
-      print(url);
+       
       var response = await http.get(url);
-      print(response.body);
+       
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
@@ -38,9 +38,9 @@ class GroupHelper {
   static Future<dynamic> getGroupMatches({String? groupName}) async {
     try {
       var url = Uri.https(API.URL, API.GROUP_MATCH + "/$groupName");
-      print(url);
+       
       var response = await http.get(url);
-      print(response.body);
+       
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
@@ -78,7 +78,7 @@ class GroupHelper {
         result = "away_win";
       }
       var url = Uri.https(API.URL, API.UPDATE_GROUP + "/$groupName");
-      print(url);
+       
       var response = await http.put(url, body: {
         "match_id": matchID,
         "home_team_id": homeTeamId,
@@ -88,7 +88,7 @@ class GroupHelper {
         "is_finished": "1",
         "match_result": result,
       });
-      print(response.body);
+       
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
@@ -118,7 +118,7 @@ class GroupHelper {
   static Future<dynamic> addGroup({List? teamList, String? groupName}) async {
     try {
       var url = Uri.https(API.URL, API.ADD_GROUP + "/$groupName");
-      print(url);
+       
       List<Map<String, dynamic>> _temp = [];
       for (var i = 0; i < teamList!.length; i++) {
         _temp.add({
@@ -133,7 +133,7 @@ class GroupHelper {
       var body = json.encode(reqBody);
       print(body);
       var response = await http.post(url, body: body, headers: {'Content-type': 'application/json'});
-      print(response.body);
+       
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
@@ -164,9 +164,9 @@ class GroupHelper {
   static Future<dynamic> drawRound() async {
     try {
       var url = Uri.https(API.URL, API.GROUP_QUALIFIED);
-      print(url);
+       
       var response = await http.get(url);
-      print(response.body);
+       
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {

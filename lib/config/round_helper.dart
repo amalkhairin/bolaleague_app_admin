@@ -6,9 +6,9 @@ class RoundHelper {
   static Future<dynamic> getRoundMatches({String? leg}) async {
     try {
       var url = Uri.https(API.URL, API.ROUND_MATCHES+ "/$leg");
-      print(url);
+       
       var response = await http.get(url);
-      print(response.body);
+       
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
@@ -38,7 +38,7 @@ class RoundHelper {
   static Future<dynamic> updateRoundMatches({String? matchID, String? leg, String? homeTeamId, String? awayTeamId, String? homeScore, String? awayScore}) async {
     try {
       var url = Uri.https(API.URL, API.UPDATE_ROUND);
-      print(url);
+       
       var response = await http.put(url, body: {
         "match_id": matchID,
         "leg": leg,
@@ -48,7 +48,7 @@ class RoundHelper {
         "away_score": awayScore,
         "is_finished": "1",
       });
-      print(response.body);
+       
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
