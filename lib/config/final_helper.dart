@@ -6,9 +6,9 @@ class FinalHelper {
   static Future<dynamic> getFinalMatches() async {
     try {
       var url = Uri.https(API.URL, API.FINAL_MATCHES);
-       
+      print(url);
       var response = await http.get(url);
-       
+      print(response.body);
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
@@ -43,7 +43,7 @@ class FinalHelper {
       String? awayScore}) async {
     try {
       var url = Uri.https(API.URL, API.UPDATE_FINAL);
-       
+      print(url);
       var response = await http.put(url, body: {
         "match_id": matchID,
         "home_team_id": homeTeamId,
@@ -52,7 +52,7 @@ class FinalHelper {
         "away_score": awayScore,
         "is_finished": "1",
       });
-       
+      print(response.body);
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
@@ -82,9 +82,9 @@ class FinalHelper {
   static Future<dynamic> drawFinal() async {
     try {
       var url = Uri.https(API.URL, API.FINAL_DRAW);
-       
+      print(url);
       var response = await http.get(url);
-       
+      print(response.body);
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {

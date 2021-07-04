@@ -6,9 +6,9 @@ class QuarterHelper {
   static Future<dynamic> getQuarterMatches({String? leg}) async {
     try {
       var url = Uri.https(API.URL, API.QUARTER_MATCHES + "/$leg");
-       
+      print(url);
       var response = await http.get(url);
-       
+      print(response.body);
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
@@ -44,7 +44,7 @@ class QuarterHelper {
       String? awayScore}) async {
     try {
       var url = Uri.https(API.URL, API.UPDATE_QUARTER);
-       
+      print(url);
       var response = await http.put(url, body: {
         "match_id": matchID,
         "leg": leg,
@@ -54,7 +54,7 @@ class QuarterHelper {
         "away_score": awayScore,
         "is_finished": "1",
       });
-       
+      print(response.body);
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
@@ -84,9 +84,9 @@ class QuarterHelper {
   static Future<dynamic> drawQuarter() async {
     try {
       var url = Uri.https(API.URL, API.DRAW_QUARTER);
-       
+      print(url);
       var response = await http.get(url);
-       
+      print(response.body);
       var jsonRes = json.decode(response.body);
       if (response.statusCode == 200) {
         if (jsonRes['success'] == true) {
