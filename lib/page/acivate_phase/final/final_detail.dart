@@ -255,7 +255,7 @@ class _FinalDetailPageState extends State<FinalDetailPage> {
                                           RecognisedText recognisedText = await _textDetector.processImage(_inputImage);
                                           List<String> _tmp = extractText(recognisedText.text);
                                           bool isValid = isValidMatchdayImage(_listMatch[index].homeTeamName!, _listMatch[index].awayTeamName!, _tmp);
-                                          print(isValid);
+                                           
                                           if (isValid) {
                                             String homeTeam = "";
                                           for (String item in _tmp) {
@@ -272,7 +272,7 @@ class _FinalDetailPageState extends State<FinalDetailPage> {
                                           if (homeTeam == _listMatch[index].homeTeamName!) {
                                             var home = _tmp[2];
                                             var away = _tmp[3];
-                                            print("Score: $home - $away");
+                                             
                                             data = await FinalHelper.updateFinalMatches(
                                               matchID: "${_listMatch[index].matchID}",
                                               homeTeamId: "${_listMatch[index].homeTeamID}",
@@ -283,7 +283,7 @@ class _FinalDetailPageState extends State<FinalDetailPage> {
                                           } else if (homeTeam == _listMatch[index].awayTeamName!){
                                             var home = _tmp[3];
                                             var away = _tmp[2];
-                                            print("Score: $home - $away");
+                                             
                                             data = await FinalHelper.updateFinalMatches(
                                               matchID: "${_listMatch[index].matchID}",
                                               homeTeamId: "${_listMatch[index].homeTeamID}",

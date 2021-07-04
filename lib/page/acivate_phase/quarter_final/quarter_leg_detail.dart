@@ -228,7 +228,7 @@ class _QuarterLegDetailPageState extends State<QuarterLegDetailPage> {
                                         RecognisedText recognisedText = await _textDetector.processImage(_inputImage);
                                         List<String> _tmp = extractText(recognisedText.text);
                                         bool isValid = isValidMatchdayImage(_listMatch[index].homeTeamName!, _listMatch[index].awayTeamName!, _tmp);
-                                        print(isValid);
+                                         
                                         if (isValid) {
                                           String homeTeam = "";
                                           for (String item in _tmp) {
@@ -245,7 +245,7 @@ class _QuarterLegDetailPageState extends State<QuarterLegDetailPage> {
                                           if (homeTeam == _listMatch[index].homeTeamName!) {
                                             var home = _tmp[2];
                                             var away = _tmp[3];
-                                            print("Score: $home - $away");
+                                             
                                             data = await QuarterHelper.updateQuarterMatches(
                                               matchID: "${_listMatch[index].matchID}",
                                               leg: "${widget.title}",
@@ -257,7 +257,7 @@ class _QuarterLegDetailPageState extends State<QuarterLegDetailPage> {
                                           } else if (homeTeam == _listMatch[index].awayTeamName!){
                                             var home = _tmp[3];
                                             var away = _tmp[2];
-                                            print("Score: $home - $away");
+                                             
                                             data = await QuarterHelper.updateQuarterMatches(
                                               matchID: "${_listMatch[index].matchID}",
                                               leg: "${widget.title}",

@@ -351,9 +351,9 @@ class _GroupStageState extends State<GroupStage> {
                                                     });
                                                     RecognisedText recognisedText = await _textDetector.processImage(_inputImage);
                                                     List<String> _tmp = extractText(recognisedText.text);
-                                                    print(_tmp);
+                                                    
                                                     bool isValid = isValidMatchdayImage(_temp[cardIndex].homeTeamName!, _temp[cardIndex].awayTeamName!, _tmp);
-                                                    print(isValid);
+                                                     
                                                     if (isValid) {
                                                       String homeTeam = "";
                                                       for (String item in _tmp) {
@@ -370,7 +370,7 @@ class _GroupStageState extends State<GroupStage> {
                                                       if (homeTeam == _temp[cardIndex].homeTeamName!) {
                                                         var home = _tmp[2];
                                                         var away = _tmp[3];
-                                                        print("Score: $home - $away");
+                                                         
                                                         data = await GroupHelper.updateGroupMatches(
                                                           groupName: widget.title,
                                                           matchID: "${_temp[cardIndex].matchID}",
@@ -382,7 +382,7 @@ class _GroupStageState extends State<GroupStage> {
                                                       } else if (homeTeam == _temp[cardIndex].awayTeamName!){
                                                         var home = _tmp[3];
                                                         var away = _tmp[2];
-                                                        print("Score: $home - $away");
+                                                         
                                                         data = await GroupHelper.updateGroupMatches(
                                                           groupName: widget.title,
                                                           matchID: "${_temp[cardIndex].matchID}",
