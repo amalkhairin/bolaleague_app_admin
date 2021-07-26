@@ -145,6 +145,76 @@ class UserHelper {
     }
   }
 
+  static Future<dynamic> getAllRegisteredTeamsDraw() async {
+    try {
+      var url = Uri.https(API.URL, API.REGISTERED_TEAMS_DRAW);
+
+      var response = await http.get(url);
+
+      var jsonRes = json.decode(response.body);
+      if (response.statusCode == 200) {
+        if (jsonRes['success'] == true) {
+          return {
+            "success": true,
+            "data": jsonRes['data'],
+          };
+        } else {
+          return {
+            "success": false,
+            "message": jsonRes['message'],
+          };
+        }
+      }
+      return {
+        "success": false,
+        "message": jsonRes['message'],
+      };
+    } catch (e) {
+      return {
+        "success": false,
+        "message": "ERR: $e",
+      };
+    }
+  }
+
+  static Future<dynamic> addWinnerGallery({int? winnerId, String? winnerName, int? runnerUpId,  String? runnerUpName}) async {
+    try {
+      var url = Uri.https(API.URL, API.ADD_WINNER_GALLERY);
+
+      var response = await http.post(url, body: {
+        "winner_id": winnerId.toString(),
+        "winner_name": winnerName,
+        "runner_up_id": runnerUpId.toString(),
+        "runner_up_name": runnerUpName
+      });
+
+      var jsonRes = json.decode(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (jsonRes['success'] == true) {
+          return {
+            "success": true,
+            "message": jsonRes['message'],
+            "data": jsonRes['data'],
+          };
+        } else {
+          return {
+            "success": false,
+            "message": jsonRes['message'],
+          };
+        }
+      }
+      return {
+        "success": false,
+        "message": jsonRes['message'],
+      };
+    } catch (e) {
+      return {
+        "success": false,
+        "message": "ERR: $e",
+      };
+    }
+  }
+
   static Future<dynamic> getAllTeams() async {
     try {
       var url = Uri.https(API.URL, API.USER);

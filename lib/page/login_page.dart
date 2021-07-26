@@ -1,8 +1,11 @@
+import 'package:bolalucu_admin/component/button/b_button.dart';
+import 'package:bolalucu_admin/component/dialog/b_dialog.dart';
 import 'package:bolalucu_admin/config/user_helper.dart';
 import 'package:bolalucu_admin/constant/colors.dart';
 import 'package:bolalucu_admin/model/user_model.dart';
 import 'package:bolalucu_admin/page/dashboard_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({ Key? key }) : super(key: key);
@@ -111,29 +114,11 @@ class _LoginPageState extends State<LoginPage> {
                             setState(() {
                               _isLoading = false;
                             });
-                            if(data['data'][0]['status'] == 0){
-                              showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: Text("${data['message']}"),
-                                  content: Text("Please contact Admin to complete the registration"),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: (){
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Text("Ok"),
-                                    )
-                                  ],
-                                )
-                              );
-                            } else {
-                              User user = User(data);
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (context) => DashboardPage())
-                              );
-                            }
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            await prefs.setBool("is_login", true);
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) => DashboardPage())
+                            );
                           } else {
                             setState(() {
                               _isLoading = false;
@@ -141,16 +126,17 @@ class _LoginPageState extends State<LoginPage> {
                             showDialog(
                               barrierDismissible: false,
                               context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text("Login failed!"),
-                                content: Text("${data['message']}"),
-                                actions: [
-                                  TextButton(
+                              builder: (context) => BDialog(
+                                title: "LOGIN GAGAL!",
+                                description: "${data['message']}",
+                                dialogType: BDialogType.FAILED,
+                                action: [
+                                  BButton(
                                     onPressed: (){
                                       Navigator.of(context).pop();
                                     },
-                                    child: Text("Ok"),
-                                  )
+                                    label: Text("Ok"),
+                                  ),
                                 ],
                               )
                             );

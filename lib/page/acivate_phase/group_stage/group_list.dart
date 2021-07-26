@@ -24,7 +24,7 @@ class _GroupListState extends State<GroupList> {
     setState(() {
       _isLoading = true;
     });
-    var data = await UserHelper.getAllRegisteredTeams();
+    var data = await UserHelper.getAllRegisteredTeamsDraw();
     if (data['success']) {
       if (mounted) {
         setState(() {

@@ -1,8 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.bolalucu_admin">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="bolalucu_admin"
-        android:icon="@mipmap/ic_launcher">
+        android:label="bolalucu admin"
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

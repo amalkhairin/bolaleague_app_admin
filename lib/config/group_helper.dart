@@ -131,7 +131,6 @@ class GroupHelper {
         "team_list" : _temp,
       };
       var body = json.encode(reqBody);
-      print(body);
       var response = await http.post(url, body: body, headers: {'Content-type': 'application/json'});
        
       var jsonRes = json.decode(response.body);

@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:bolalucu_admin/component/button/b_button.dart';
+import 'package:bolalucu_admin/component/dialog/b_dialog.dart';
 import 'package:bolalucu_admin/config/group_helper.dart';
 import 'package:bolalucu_admin/config/user_helper.dart';
 import 'package:bolalucu_admin/constant/colors.dart';
 import 'package:bolalucu_admin/model/match_model.dart';
 import 'package:bolalucu_admin/model/user_model.dart';
 import 'package:flutter/material.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,16 +22,25 @@ class GroupStage extends StatefulWidget {
 class _GroupStageState extends State<GroupStage> {
   List<int> _matchDay = [1,2,3,4,5,6];
   int? _selectedMatchIndex;
-  TextDetector _textDetector = GoogleMlKit.vision.textDetector();
-  var _inputImage;
-  File? _image;
-  final _picker = ImagePicker();
   User _user = User.instance;
   bool _isLoading = false;
   bool _isError = false;
   String _errMessage = "";
   List _groupStandings = [];
-  List<MatchModel> _listMatches = []; 
+  List<MatchModel> _listMatches = [];
+  List<TextEditingController> _listHomeScoreController = List.generate(12, (index) => TextEditingController());
+  List<TextEditingController> _listAwayScoreController = List.generate(12, (index) => TextEditingController());
+
+  isValidScore(String home, String away){
+    try {
+      int skor1 = int.parse(home);
+      int skor2 = int.parse(away);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 
   isUserGroup(){
     bool isExist = false;
@@ -112,32 +122,6 @@ class _GroupStageState extends State<GroupStage> {
         });
       }
     }
-  }
-
-  getImage() async {
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-    setState(() {
-      if(pickedFile != null){
-        _image = File(pickedFile.path);
-        _inputImage = InputImage.fromFile(_image!);
-      } else {
-        print("No image selected");
-      }
-    });
-  }
-
-  languageDetector(String text){
-    if (text.contains("Next") || text.contains("Back"))
-      return "EN";
-    else if (text.contains("Kembali") || text.contains("Berikut"))
-      return "ID";
-    else
-      return "ERR";
-  }
-
-  extractText(String text){
-    List<String> _temp = text.split("\n");
-    return _temp;
   }
 
   @override
@@ -297,24 +281,24 @@ class _GroupStageState extends State<GroupStage> {
                                       title: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Column(
-                                            children: [
-                                              CircleAvatar(backgroundColor: Colors.blue, child: Text("${_temp[cardIndex].homeTeamName!.substring(0,1)}"),),
-                                              Container(
-                                                width: 80,
-                                                child: Center(child: Text("${_temp[cardIndex].homeTeamName}", overflow: TextOverflow.ellipsis,))
-                                              ),
-                                            ],
+                                          Container(
+                                            width: 100,
+                                            child: Column(
+                                              children: [
+                                                CircleAvatar(backgroundColor: Colors.blue, child: Text("${_temp[cardIndex].homeTeamName!.substring(0,1)}"),),
+                                                Text("${_temp[cardIndex].homeTeamName}", textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                              ],
+                                            ),
                                           ),
                                           Text("${_temp[cardIndex].homeScore} - ${_temp[cardIndex].awayScore}", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-                                          Column(
-                                            children: [
-                                              CircleAvatar(backgroundColor: Colors.orange, child: Text("${_temp[cardIndex].awayTeamName!.substring(0,1)}"),),
-                                              Container(
-                                                width: 80,
-                                                child: Center(child: Text("${_temp[cardIndex].awayTeamName}", overflow: TextOverflow.ellipsis,))
-                                              ),
-                                            ],
+                                          Container(
+                                            width: 100,
+                                            child: Column(
+                                              children: [
+                                                CircleAvatar(backgroundColor: Colors.orange, child: Text("${_temp[cardIndex].awayTeamName!.substring(0,1)}"),),
+                                                Text("${_temp[cardIndex].awayTeamName}", textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -323,137 +307,139 @@ class _GroupStageState extends State<GroupStage> {
                                           children: [
                                             Padding(
                                               padding: const EdgeInsets.all(24),
-                                              child: InkWell(
-                                                onTap: () async {
-                                                  await getImage();
-                                                },
-                                                child: Container(
-                                                  height: 180,
-                                                  width: screenSize.width,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey[200],
-                                                    borderRadius: BorderRadius.circular(10)
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    width: screenSize.width/3.2,
+                                                    child: TextFormField(
+                                                      controller: _listHomeScoreController[matchIndex],
+                                                      textInputAction: TextInputAction.next,
+                                                      keyboardType: TextInputType.number,
+                                                      decoration: InputDecoration(
+                                                        filled: true,
+                                                        hintText: "Skor",
+                                                        fillColor: Colors.blue[100],
+                                                        border: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(10),),
+                                                        enabledBorder: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(10),),
+                                                        focusedBorder: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(10),),
+                                                      ),
+                                                    ),
                                                   ),
-                                                  child: _image == null
-                                                      ? Center(child: Text("Upload Image"))
-                                                      : Image.file(_image!)
-                                                ),
+                                                  Container(
+                                                    width: screenSize.width/3.2,
+                                                    child: TextFormField(
+                                                      controller: _listAwayScoreController[matchIndex],
+                                                      keyboardType: TextInputType.number,
+                                                      decoration: InputDecoration(
+                                                        filled: true,
+                                                        hintText: "Skor",
+                                                        fillColor: Colors.orange[100],
+                                                        border: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(10),),
+                                                        enabledBorder: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(10),),
+                                                        focusedBorder: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(10),),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
                                             ),
+                                            SizedBox(height: 10,),
                                             Padding(
                                               padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-                                              child: SizedBox(
-                                                width: screenSize.width,
-                                                child: ElevatedButton(
-                                                  onPressed: () async{
-                                                    setState(() {
-                                                      _isLoading = true;
-                                                    });
-                                                    RecognisedText recognisedText = await _textDetector.processImage(_inputImage);
-                                                    List<String> _tmp = extractText(recognisedText.text);
-                                                    
-                                                    bool isValid = isValidMatchdayImage(_temp[cardIndex].homeTeamName!, _temp[cardIndex].awayTeamName!, _tmp);
-                                                     
-                                                    if (isValid) {
-                                                      String homeTeam = "";
-                                                      for (String item in _tmp) {
-                                                        if (item == _temp[cardIndex].homeTeamName!){
-                                                          homeTeam = item;
-                                                          break;
-                                                        }
-                                                        if (item == _temp[cardIndex].awayTeamName!){
-                                                          homeTeam = item;
-                                                          break;
-                                                        }
-                                                      }
-                                                      var data = Map<String, dynamic>();
-                                                      if (homeTeam == _temp[cardIndex].homeTeamName!) {
-                                                        var home = _tmp[2];
-                                                        var away = _tmp[3];
-                                                         
-                                                        data = await GroupHelper.updateGroupMatches(
-                                                          groupName: widget.title,
-                                                          matchID: "${_temp[cardIndex].matchID}",
-                                                          homeTeamId: "${_temp[cardIndex].homeTeamID}",
-                                                          awayTeamId: "${_temp[cardIndex].awayTeamID}",
-                                                          homeScore: home,
-                                                          awayScore: away,
-                                                        );
-                                                      } else if (homeTeam == _temp[cardIndex].awayTeamName!){
-                                                        var home = _tmp[3];
-                                                        var away = _tmp[2];
-                                                         
-                                                        data = await GroupHelper.updateGroupMatches(
-                                                          groupName: widget.title,
-                                                          matchID: "${_temp[cardIndex].matchID}",
-                                                          homeTeamId: "${_temp[cardIndex].homeTeamID}",
-                                                          awayTeamId: "${_temp[cardIndex].awayTeamID}",
-                                                          homeScore: home,
-                                                          awayScore: away,
-                                                        );
-                                                      } else {
-                                                        data['success'] = false;
-                                                        data['message'] = "Invalid match result";
-                                                      }
-                                                      if (data['success']) {
-                                                        loadGroupData();
-                                                        setState(() {
-                                                          _image = null;
-                                                          _inputImage = null;
-                                                        });
-                                                      } else {
-                                                        setState(() {
-                                                          _image = null;
-                                                          _inputImage = null;
-                                                          _isLoading = false;
-                                                        });
-                                                        showDialog(
-                                                          context: this.context, 
-                                                          builder: (context) => AlertDialog(
-                                                            title: Text("ERR"),
-                                                            content: Text("${data['message']}"),
-                                                            actions: [
-                                                              TextButton(
-                                                                onPressed: (){
-                                                                  Navigator.of(context).pop();
-                                                                },
-                                                                child: Text("Ok"),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        );
-                                                      }
-                                                    } else {
-                                                      setState(() {
-                                                        _isLoading = false;
-                                                        _image = null;
-                                                        _inputImage = null;
-                                                      });
-                                                      showDialog(
-                                                        context: this.context, 
-                                                        builder: (BuildContext context) => AlertDialog(
-                                                          title: Text("ERR"),
-                                                          content: Text("Invalid match result"),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: (){
-                                                                Navigator.of(context).pop();
-                                                              },
-                                                              child: Text("Ok"),
-                                                            ),
-                                                          ],
-                                                        )
-                                                      );
-                                                    }
-                                                  },
-                                                  style: ElevatedButton.styleFrom(
-                                                    primary: blueColor,
-                                                    elevation: 0.0,
-                                                  ),
-                                                  child: Text("Save"),
-                                                ),
+                                              child: BButton(
+                                                onPressed: () async {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) => BDialog(
+                                                      title: "INPUT HASIL PERTANDINGAN",
+                                                      description: "Apakah anda yakin?\nPastikan skor sudah benar. Jika terdapat KECURANGAN maka akan dikenakan sanksi BANNED.",
+                                                      dialogType: BDialogType.INFO,
+                                                      action: [
+                                                        BButton(
+                                                          onPressed: (){
+                                                            Navigator.of(context).pop();
+                                                          },
+                                                          label: Text("Cancel"),
+                                                          style: BButtonStyle.SECONDARY,
+                                                        ),
+                                                        BButton(
+                                                          onPressed: () async {
+                                                            Navigator.of(context).pop();
+                                                            setState(() {
+                                                              _isLoading = true;
+                                                            });
+                                                            if(isValidScore(_listHomeScoreController[matchIndex].text, _listAwayScoreController[matchIndex].text)) {
+                                                              String homeScore = _listHomeScoreController[matchIndex].text;
+                                                              String awayScore = _listAwayScoreController[matchIndex].text;
+                                                              var data = await GroupHelper.updateGroupMatches(
+                                                                groupName: widget.title,
+                                                                matchID: "${_temp[cardIndex].matchID}",
+                                                                homeTeamId: "${_temp[cardIndex].homeTeamID}",
+                                                                awayTeamId: "${_temp[cardIndex].awayTeamID}",
+                                                                homeScore: homeScore,
+                                                                awayScore: awayScore,
+                                                              );
+                                                              if (data['success']) {
+                                                                loadGroupData();
+                                                              } else {
+                                                                setState(() {
+                                                                  _isLoading = false;
+                                                                });
+                                                                showDialog(
+                                                                  context: context,
+                                                                  builder: (context) => BDialog(
+                                                                    title: "ERROR",
+                                                                    description: "${data['message']}",
+                                                                    dialogType: BDialogType.ERROR,
+                                                                    action: [
+                                                                      BButton(
+                                                                        onPressed: (){
+                                                                          Navigator.of(context).pop();
+                                                                        },
+                                                                        label: Text("Ok"),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                );
+                                                              }
+                                                            } else {
+                                                              setState(() {
+                                                                _isLoading = false;
+                                                              });
+                                                              showDialog(
+                                                                context: context,
+                                                                builder: (context) => BDialog(
+                                                                  title: "ERROR",
+                                                                  description: "Input tidak valid!",
+                                                                  dialogType: BDialogType.FAILED,
+                                                                  action: [
+                                                                    BButton(
+                                                                      onPressed: (){
+                                                                        Navigator.of(context).pop();
+                                                                      },
+                                                                      label: Text("Ok"),
+                                                                    ),
+                                                                  ],
+                                                                )
+                                                              );
+                                                            }
+                                                          },
+                                                          label: Text("Ok"),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  );
+                                                },
+                                                label: Text("Save"),
                                               ),
-                                            )
+                                            ),
                                           ],
                                         ),
                                       ],
@@ -461,24 +447,24 @@ class _GroupStageState extends State<GroupStage> {
                                     : Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          children: [
-                                            CircleAvatar(backgroundColor: Colors.blue, child: Text("${_temp[cardIndex].homeTeamName!.substring(0,1)}"),),
-                                            Container(
-                                                width: 80,
-                                                child: Center(child: Text("${_temp[cardIndex].homeTeamName}", overflow: TextOverflow.ellipsis,))
-                                              ),
-                                          ],
+                                        Container(
+                                          width: 100,
+                                          child: Column(
+                                            children: [
+                                              CircleAvatar(backgroundColor: Colors.blue, child: Text("${_temp[cardIndex].homeTeamName!.substring(0,1)}"),),
+                                              Text("${_temp[cardIndex].homeTeamName}", textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                            ],
+                                          ),
                                         ),
                                         Text("${_temp[cardIndex].homeScore} - ${_temp[cardIndex].awayScore}", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
-                                        Column(
-                                          children: [
-                                            CircleAvatar(backgroundColor: Colors.orange, child: Text("${_temp[cardIndex].awayTeamName!.substring(0,1)}"),),
-                                            Container(
-                                                width: 80,
-                                                child: Center(child: Text("${_temp[cardIndex].awayTeamName}", overflow: TextOverflow.ellipsis,))
-                                              ),
-                                          ],
+                                        Container(
+                                          width: 100,
+                                          child: Column(
+                                            children: [
+                                              CircleAvatar(backgroundColor: Colors.orange, child: Text("${_temp[cardIndex].awayTeamName!.substring(0,1)}"),),
+                                              Text("${_temp[cardIndex].awayTeamName}", textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis,),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     )

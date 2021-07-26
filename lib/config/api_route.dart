@@ -9,6 +9,7 @@ class API {
   static const String NO_WA = "/v1/user/wa";  //+id
   static const String DEL_USER = "/v1/user";  //delete all user
   static const String REGISTERED_TEAMS = "/v1/user/registered/all";
+  static const String REGISTERED_TEAMS_DRAW = "/v1/user/registered/draw";
 
   // group
   static const ADD_GROUP = "/v1/group";   //+group name
@@ -42,5 +43,6 @@ class API {
   static const MESSAGE = "/v1/user/admin/message";
   static const RESET_SEASON = "/v1/table/reset";
   static const LOGIN_ADMIN = "/v1/user/admin/login";
+  static const ADD_WINNER_GALLERY = "/v1/user/gallery/add";
   
 }
