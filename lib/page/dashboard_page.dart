@@ -23,33 +23,33 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: Container(
-          width: screenSize.width,
-          height: screenSize.height,
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 100,
-                  child: Image.asset("assets/img/logo.png", fit: BoxFit.fitWidth,),
-                ),
-                SizedBox(height: 24,),
-                Container(
-                  width: screenSize.width,
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(10)
+        child: SingleChildScrollView(
+          child: Container(
+            width: screenSize.width,
+            // height: screenSize.height,
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 100,
+                    child: Image.asset("assets/img/logo.png", fit: BoxFit.fitWidth,),
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Text('Dashboard - Admin')
+                  SizedBox(height: 24,),
+                  Container(
+                    width: screenSize.width,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(24),
+                      child: Text('Dashboard - Admin')
+                    ),
                   ),
-                ),
-                SizedBox(height: 42,),
-                Expanded(
-                  child: GridView.count(
+                  SizedBox(height: 42,),
+                  GridView.count(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     crossAxisCount: 2,
@@ -185,9 +185,9 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                       ),
                     ],
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

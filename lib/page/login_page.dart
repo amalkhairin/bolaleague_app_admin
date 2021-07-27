@@ -66,6 +66,11 @@ class _LoginPageState extends State<LoginPage> {
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _isSecure,
+                    onFieldSubmitted: (value){
+                      setState(() {
+                        
+                      });
+                    },
                     decoration: InputDecoration(
                       hintText: "Enter your password",
                       filled: true,
@@ -101,7 +106,11 @@ class _LoginPageState extends State<LoginPage> {
                         primary: blueColor,
                         onPrimary: whiteColor
                       ),
-                      onPressed: _isLoading? (){} : (_ownerIdController.text.isEmpty || _passwordController.text.isEmpty)? null : () async {
+                      onPressed: _isLoading? (){} : (_ownerIdController.text.isEmpty || _passwordController.text.isEmpty)? (){
+                        setState(() {
+                          
+                        });
+                      } : () async {
                         if (_ownerIdController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
                           setState(() {
                             _isLoading = true;
